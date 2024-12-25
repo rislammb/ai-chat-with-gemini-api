@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const genAI = new GoogleGenerativeAI("AIzaSyDAzugFCychYu2hYIcunEU12BxiT88Q4Us");
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 app.post("/gemini", async (req, res) => {
     console.log(req.body.history);
