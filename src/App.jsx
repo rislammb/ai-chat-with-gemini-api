@@ -1,67 +1,68 @@
 import {useState} from "react";
+import {interactWithAI} from "./utils/actions.js";
 
 function App() {
+    const [submitting, setSubmitting] = useState(false);
     const [value, setValue] = useState("");
     const [error, setError] = useState("");
-    const [chatHistory] = useState([]);
+    const [chatHistory, setChatHistory] = useState([]);
 
-    const surpriseOptions = [
-        "Who won the latest peace prize?",
-        "Where does pizza come from?",
-        "Who do you make a BLT sandwich?",
-    ]
+    const surpriseOptions = ["Who won the latest peace prize?", "Where does pizza come from?", "Who do you make a BLT sandwich?",]
 
     const surprise = () => {
         const randomValue = surpriseOptions[Math.floor(Math.random() * surpriseOptions.length)];
         setValue(randomValue);
     }
 
-    const getResponse = async () => {
+    const getResponse = async (e) => {
+        e.preventDefault();
         if (!value) {
             setError("Error! Please ask a a question!");
             return
         }
-        try {
-            const options = {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    history: chatHistory,
-                    message: value,
-                }),
-            }
-            const response = await fetch("http://localhost:8000/gemini", options);
-            const data = await response.text();
-            console.log(data);
-        } catch (error) {
+
+        setSubmitting(true);
+        interactWithAI([...chatHistory], value).then((data) => {
+            setChatHistory((prevState) => [...prevState, {
+                role: "user", parts: [{text: value}],
+            }, {
+                role: "model", parts: [{text: data}],
+            }])
+            setValue("");
+        }).catch((error) => {
             console.log(error)
             setError("something went wrong! please try again later.")
-        }
+        }).finally(() => setSubmitting(false))
     }
 
     const handleClear = () => {
         setError("");
+        setValue("")
+        setChatHistory([]);
     }
 
-    return (
-        <div className="app">
-            <p>What do yoy want to know?
-                <button className={"surprise"} onClick={surprise} disabled={!chatHistory}>Surprise me</button>
-            </p>
-            <div className={"input-container"}>
-                <input value={value} placeholder={"When is winter...?"} onChange={(e) => setValue(e.target.value)}/>
-                {error ? <button onClick={handleClear}>Clear</button> : <button onClick={getResponse}>Ask me</button>}
-            </div>
-            {error && <p>{error}</p>}
-            <div className="search-result">
-                <div key={""}>
-                    <p className="answer"></p>
-                </div>
+    return (<div className="app">
+        <div className="search-result">
+            {chatHistory.map((chatItem, index) => (
+                <div key={index} className={chatItem.role === "user" ? "chat-item user" : "chat-item"}>
+                    <p className="answer">{chatItem.parts[0].text}</p>
+                </div>))}
+        </div>
+        <div className={"bottom"}>
+            <div className={"bottom_content"}>
+                <p>What do yoy want to know?
+                    <button className={"surprise"} onClick={surprise} disabled={chatHistory.length > 0}>Surprise
+                        me</button>
+                </p>
+                <form className={"input-container"} onSubmit={getResponse}>
+                    <input value={value} placeholder={"When is winter...?"} onChange={(e) => setValue(e.target.value)}/>
+                    {error ? <button onClick={handleClear}>Clear</button> :
+                        <button type={"submit"} disabled={!value || submitting}>Ask me</button>}
+                </form>
+                {error && <p>{error}</p>}
             </div>
         </div>
-    )
+    </div>)
 }
 
 export default App
