@@ -8,7 +8,7 @@
 }
 .app {
     width: 97%;
-    max-width: 530px;
+    max-width: 1100px;
     margin: 0 auto;
     min-height: 100vh;
 }
@@ -42,7 +42,7 @@
     width: 97%;
     margin: 0 auto;
     padding-bottom: 0.5rem;
-    max-width: 530px;
+    max-width: 1100px;
 }
 .surprise {
     border-radius: 5px;
