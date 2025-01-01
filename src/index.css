@@ -98,3 +98,8 @@
   color: #ff2a2a;
   font-size: 0.8rem;
 }
+@media (min-width: 764px) {
+  * {
+    font-size: 16px;
+  }
+}
