@@ -1,20 +1,22 @@
 * {
   font-family: Trebuchet MS, sans-serif;
-  margin: 0;
-  padding: 0;
   font-size: 14px;
   box-sizing: border-box;
-  background-color: #2e2e2e;
   color: #cacaca;
+}
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #151515;
 }
 .app {
   width: 97%;
-  max-width: 1100px;
+  max-width: 990px;
   margin: 0 auto;
   min-height: 100vh;
 }
 .search-result {
-  padding-bottom: 90px;
+  padding-bottom: 80px;
   scroll-behavior: smooth;
 }
 .chat-item {
@@ -27,18 +29,18 @@
 }
 .answer {
   max-width: 90%;
-  padding: 0.5rem 0.7rem;
-  line-height: 1.2;
+  padding: 0 0.7rem;
   border-radius: 6px;
   margin-top: 0.4rem;
   text-align: justify;
-  word-break: break-all;
   border: 1px solid rgba(202, 202, 202, 0.06);
 }
 .answer ul {
   list-style-position: inside;
+  padding: 0;
 }
 .bottom {
+  background-color: #181818;
   width: 100%;
   position: fixed;
   bottom: 0;
@@ -48,14 +50,18 @@
   width: 97%;
   margin: 0 auto;
   padding-bottom: 0.5rem;
-  max-width: 1100px;
+  max-width: 760px;
+}
+.bottom_p {
+  margin: 6px 0;
 }
 .surprise {
   border-radius: 5px;
-  padding: 4px 12px;
-  margin: 0 0 2px 5px;
+  padding: 2px 8px;
+  margin-left: 5px;
   border: solid 1px rgba(202, 202, 202, 0.06);
   cursor: pointer;
+  background-color: #1c1c1c;
 }
 .surprise:hover:not(:disabled) {
   border-color: rgba(202, 202, 202, 0.1);
@@ -72,12 +78,16 @@
 .input-container:focus-within {
   border-color: rgba(202, 202, 202, 0.1);
 }
-.input-container input {
+.input-container textarea {
   border: none;
-  padding: 13px 14px;
+  padding: 8px 12px;
   box-sizing: border-box;
   outline: none;
   flex: 1;
+  background-color: #1c1c1c;
+  resize: none;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #252525;
 }
 .input-container input:disabled {
   color: #5a5a5a;
@@ -87,6 +97,7 @@
   padding: 0 0.8rem;
   border-left: 1px solid rgba(202, 202, 202, 0.06);
   cursor: pointer;
+  background-color: #1c1c1c;
 }
 .input-container button:active {
   background-color: #cacaca;
@@ -101,5 +112,8 @@
 @media (min-width: 764px) {
   * {
     font-size: 16px;
+  }
+  .search-result {
+    padding-bottom: 90px;
   }
 }

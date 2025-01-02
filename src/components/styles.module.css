@@ -1,0 +1,24 @@
+.heading_loader,
+.text_loader {
+  background-color: #5a5a5a;
+  animation: animate 2s infinite;
+  border-radius: 4px;
+}
+.heading_loader {
+  width: 70%;
+  height: 20px;
+}
+.text_loader {
+  height: 14px;
+}
+@keyframes animate {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}

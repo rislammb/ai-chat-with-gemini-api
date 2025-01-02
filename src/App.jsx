@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import markdownit from "markdown-it";
 import { interactWithAI } from "./utils/actions.js";
+import Loading from "./components/Loading.jsx";
 
-function App() {
+const App = () => {
   const [submitting, setSubmitting] = useState(false);
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
@@ -26,7 +27,17 @@ function App() {
     setValue(randomValue);
   };
 
-  const getResponse = async (e) => {
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      if (event.shiftKey) {
+        return;
+      } else {
+        handleSubmit(event);
+      }
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!value) {
       setError("Error! Please ask a a question!");
@@ -34,14 +45,17 @@ function App() {
     }
 
     setSubmitting(true);
+    setChatHistory((prevState) => [
+      ...prevState,
+      {
+        role: "user",
+        parts: [{ text: value }],
+      },
+    ]);
     interactWithAI([...chatHistory], value)
       .then((data) => {
         setChatHistory((prevState) => [
           ...prevState,
-          {
-            role: "user",
-            parts: [{ text: value }],
-          },
           {
             role: "model",
             parts: [{ text: data }],
@@ -80,6 +94,7 @@ function App() {
               chatItem.role === "user" ? "chat-item user" : "chat-item"
             }
           >
+            {chatItem.role !== "user" && <img src="./logo.png" width={48} />}
             <article
               className="answer"
               dangerouslySetInnerHTML={{
@@ -89,10 +104,11 @@ function App() {
             {index === chatHistory.length - 2 && <div ref={scrollToRef} />}
           </div>
         ))}
+        {submitting && <Loading />}
       </div>
       <div className={"bottom"}>
         <div className={"bottom_content"}>
-          <p>
+          <p className="bottom_p">
             What do yoy want to know?
             <button
               className={"surprise"}
@@ -101,12 +117,15 @@ function App() {
               {chatHistory.length > 0 ? "Clear Chat" : "Surprise me"}
             </button>
           </p>
-          <form className={"input-container"} onSubmit={getResponse}>
-            <input
+          <form className={"input-container"} onSubmit={handleSubmit}>
+            <textarea
+              rows={1}
               value={value}
               placeholder={"When is winter...?"}
               onChange={(e) => setValue(e.target.value)}
+              onKeyDown={handleKeyDown}
               disabled={submitting}
+              draggable={false}
             />
             {error ? (
               <button onClick={handleClear}>Clear</button>
@@ -121,6 +140,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default App;
